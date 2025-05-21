@@ -1,0 +1,31 @@
+<head>
+  <link rel="stylesheet" href="/css/generalStyles.css" />
+</head>
+
+<h1 class="title">Inicio de sesión</h1>
+
+<div class="formBody">
+  <form action="/api/sessions/login" method="POST">
+    <label for="email">Email</label><br />
+    <input type="email" id="email" name="email" id="email" /><br />
+
+    <label for="password">Password</label><br />
+    <input type="password" id="password" name="password" id="password" /><br
+    /><br />
+    <button class="submitButton" type="submit">Iniciar sesión</button><br />
+  </form>
+
+  ¿No tienes cuenta?
+  <a href="/register">
+    <button class="redirectButton">
+      Ir a registración
+    </button>
+  </a>
+  <br /><br />
+  ¿Olvidaste tu contraseña?
+  <a href="/restore-password">
+    <button class="redirectButton">
+      Restaurar contraseña
+    </button>
+  </a>
+</div>

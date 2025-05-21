@@ -1,0 +1,36 @@
+.title {
+  text-align: center;
+  color: black;
+  font-family: Arial, sans-serif;
+  border-bottom: 1px solid black;
+  padding: 10px;
+}
+
+.formBody {
+  text-align: center;
+  color: black;
+  font-family: Arial, sans-serif;
+  padding: 10px;
+}
+
+.submitButton {
+  background-color: #4caf50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.redirectButton {
+  background-color: #534caf; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
