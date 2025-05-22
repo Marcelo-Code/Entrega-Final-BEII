@@ -53,7 +53,7 @@ export default class UserDAO {
 
       return await userModel.create(userDTO);
     } catch (error) {
-      return { success: false, message: error.message };
+      throw error;
     }
   }
 
@@ -62,7 +62,7 @@ export default class UserDAO {
       const users = await userModel.find();
       return users;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 
@@ -71,7 +71,7 @@ export default class UserDAO {
       const user = await userModel.findOne({ _id: id });
       return user;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 
@@ -80,7 +80,7 @@ export default class UserDAO {
       const user = await userModel.findOne({ email: email });
       return user;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 
@@ -92,7 +92,7 @@ export default class UserDAO {
       );
       return updatedUser;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 }

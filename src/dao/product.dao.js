@@ -6,7 +6,7 @@ export default class ProductDAO {
       const createdProduct = await productModel.create(newProduct);
       return createdProduct;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 
@@ -15,7 +15,7 @@ export default class ProductDAO {
       const products = await productModel.find();
       return products;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 
@@ -24,7 +24,7 @@ export default class ProductDAO {
       const product = await productModel.findOne({ _id: id });
       return product;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 
@@ -36,7 +36,7 @@ export default class ProductDAO {
       );
       return updatedProduct;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 
@@ -45,7 +45,7 @@ export default class ProductDAO {
       const deletedProduct = await productModel.deleteOne({ _id: id });
       return deletedProduct;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 }

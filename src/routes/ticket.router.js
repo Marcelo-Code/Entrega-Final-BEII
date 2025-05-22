@@ -5,6 +5,7 @@ import {
   getTicketById,
 } from "../controllers/ticket.controller.js";
 import passport from "passport";
+import { checkCartOwnership } from "../middlewares/cart.middleware.js";
 
 const router = Router();
 
@@ -12,6 +13,7 @@ const router = Router();
 router.post(
   "/:cid",
   passport.authenticate("cartUser", { session: false }),
+  checkCartOwnership,
   createTicket
 );
 

@@ -7,7 +7,7 @@ export default class CartDAO {
       const carts = await cartModel.find();
       return carts;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 
@@ -16,7 +16,7 @@ export default class CartDAO {
       const cart = await cartModel.findOne({ _id: id });
       return cart;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 

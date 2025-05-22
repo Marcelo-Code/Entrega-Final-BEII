@@ -1,12 +1,7 @@
 import passport from "passport";
 import local from "passport-local";
 import userModel from "../dao/models/user.model.js";
-import {
-  createHash,
-  generateToken,
-  isValidPassword,
-  PRIVATE_KEY,
-} from "../utils.js";
+import { isValidPassword, PRIVATE_KEY } from "../utils.js";
 
 import jwt from "passport-jwt";
 
@@ -23,6 +18,7 @@ const cookieExtractor = (req) => {
 
 const initializePassport = () => {
   //Estrategia de autenticación (función 'current')
+  //Vierifica el usuario activo
   passport.use(
     "current",
     new JWTStrategy(
@@ -32,6 +28,12 @@ const initializePassport = () => {
       },
       async (jwt_payload, done) => {
         try {
+          if (jwt_payload.role !== "admin") {
+            return done(null, false, {
+              message: "Acceso denegado: solo administradores",
+            });
+          }
+
           return done(null, jwt_payload);
         } catch (error) {
           done(error);
@@ -41,6 +43,7 @@ const initializePassport = () => {
   );
 
   //Estrategia de autenticación (función 'isLoggedIn')
+  //Verifica si el usuario esta logueado
   passport.use(
     "isLoggedIn",
     new JWTStrategy(
@@ -59,6 +62,7 @@ const initializePassport = () => {
   );
 
   //Estrategia de autenticación (función 'admin')
+  //Verifica si el usuario es admin
   passport.use(
     "admin",
     new JWTStrategy(
@@ -81,7 +85,8 @@ const initializePassport = () => {
     )
   );
 
-  //Estrategia de autenticación (función 'user-cart')
+  //Estrategia de autenticación (función 'userCart')
+  //Verifica si el usuario tiene perfil user y es el dueño del carrito en cuestión
   passport.use(
     "cartUser",
     new JWTStrategy(
@@ -91,54 +96,18 @@ const initializePassport = () => {
       },
       async (jwt_payload, done) => {
         try {
-          const { role, cart: userCartId } = jwt_payload;
+          console.log(jwt_payload);
+          const { role, cart } = jwt_payload;
 
-          // Si es admin, dejamos pasar
-          if (role === "admin") return done(null, jwt_payload);
-
-          // Adjuntamos el carrito del usuario en el objeto de autenticación
-          return done(null, { ...jwt_payload, userCartId });
-        } catch (error) {
-          return done(error);
-        }
-      }
-    )
-  );
-
-  // Estrategia de registro (función 'register')
-  passport.use(
-    "register",
-    new LocalStrategy(
-      { passReqToCallback: true, usernameField: "email" },
-      async (req, email, password, done) => {
-        const { first_name, last_name, repeat_password, age, role } = req.body;
-        try {
-          let user = await userModel.findOne({ email });
-          if (user) {
-            console.log("El usuario ya existe");
-            return done(null, false);
+          // Si el usuario no tiene rol 'user', denegar acceso
+          if (role !== "user") {
+            return done(null, false, {
+              message: "Acceso restringido a usuarios",
+            });
           }
 
-          if (password !== repeat_password) {
-            console.log("Las contraseñas no coinciden");
-            return done(null, false);
-          }
-
-          let newUser = new userModel({
-            first_name,
-            last_name,
-            email,
-            age,
-            password: createHash(password),
-            cart,
-            role,
-          });
-          await newUser.save();
-
-          const accessToken = generateToken(newUser.toObject());
-          console.log(accessToken);
-
-          return done(null, newUser);
+          // Adjuntamos el carrito al payload autenticado
+          return done(null, { ...jwt_payload, cart });
         } catch (error) {
           return done(error);
         }
@@ -147,6 +116,7 @@ const initializePassport = () => {
   );
 
   // Estategia de login
+  // Verifica si el usuario existe y la contraseña es correcta
   passport.use(
     "login",
     new LocalStrategy(

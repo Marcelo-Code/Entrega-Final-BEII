@@ -21,7 +21,7 @@ export default class TicketDAO {
       const createdTicket = await ticketModel.create(newTicket);
       return createdTicket;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 
@@ -30,7 +30,7 @@ export default class TicketDAO {
       const tickets = await ticketModel.find();
       return tickets;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 
@@ -39,7 +39,7 @@ export default class TicketDAO {
       const cart = await ticketModel.findOne({ _id: id });
       return cart;
     } catch (error) {
-      return error;
+      throw error;
     }
   };
 }

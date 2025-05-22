@@ -30,6 +30,10 @@ router.put(
 );
 
 //Eliminar productos, solamente los admins
-router.delete("/:pid", deleteProduct);
+router.delete(
+  "/:pid",
+  passport.authenticate("admin", { session: false }),
+  deleteProduct
+);
 
 export default router;

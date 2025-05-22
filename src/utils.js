@@ -48,9 +48,8 @@ export const passportCall = (strategy) => {
     passport.authenticate(strategy, function (err, user, info) {
       if (err) return next(err);
       if (!user) {
-        return res
-          .status(401)
-          .send({ error: info.messages ? info.messages : info.toString() });
+        const errorMessage = info?.message || "Autenticación fallida";
+        return res.status(401).send({ error: errorMessage });
       }
       req.user = user;
       next();
