@@ -96,7 +96,6 @@ const initializePassport = () => {
       },
       async (jwt_payload, done) => {
         try {
-          console.log(jwt_payload);
           const { role, cart } = jwt_payload;
 
           // Si el usuario no tiene rol 'user', denegar acceso
