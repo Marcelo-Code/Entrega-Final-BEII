@@ -1,9 +1,7 @@
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import express from "express";
-import handlebars from "express-handlebars";
 import { __dirname } from "./utils.js";
-import viewsRouter from "./routes/views.router.js";
 import sessionRouter from "./routes/session.router.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
@@ -44,17 +42,11 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
-//COnfiguración del motor de plantillas
-app.engine("handlebars", handlebars.engine());
-app.set("views", __dirname + "/views");
-app.set("view engine", "handlebars");
-
 // Configuración de la carpeta pública
 app.use(express.static("public"));
 
 //Rutas
 app.use(cookieParser());
-app.use("/", viewsRouter);
 app.use("/api/sessions", sessionRouter);
 app.use("/api/products", productRouter);
 app.use("/api/users", userRouter);

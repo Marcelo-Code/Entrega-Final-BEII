@@ -40,6 +40,24 @@ const initializePassport = () => {
     )
   );
 
+  //Estrategia de autenticación (función 'isLoggedIn')
+  passport.use(
+    "isLoggedIn",
+    new JWTStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: PRIVATE_KEY,
+      },
+      async (jwt_payload, done) => {
+        try {
+          return done(null, jwt_payload);
+        } catch (error) {
+          done(error, false);
+        }
+      }
+    )
+  );
+
   //Estrategia de autenticación (función 'admin')
   passport.use(
     "admin",
@@ -93,8 +111,7 @@ const initializePassport = () => {
     new LocalStrategy(
       { passReqToCallback: true, usernameField: "email" },
       async (req, email, password, done) => {
-        const { first_name, last_name, repeat_password, age, cart, role } =
-          req.body;
+        const { first_name, last_name, repeat_password, age, role } = req.body;
         try {
           let user = await userModel.findOne({ email });
           if (user) {

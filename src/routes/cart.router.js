@@ -9,9 +9,6 @@ import passport from "passport";
 
 const router = Router();
 
-//El carrito se crea al crear un usuario
-router.post("/", createCart);
-
 //Sólo administradores pueden ver la totalidad de los carritos
 router.get("/", passport.authenticate("admin", { session: false }), getCarts);
 

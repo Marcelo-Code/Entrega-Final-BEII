@@ -6,11 +6,6 @@ export default class CartRepository {
     this.dao = new CartDAO();
   }
 
-  createCart = async (newCart) => {
-    const cartToCreate = new CartDTO(newCart);
-    return await this.dao.createCart(cartToCreate);
-  };
-
   getCarts = async () => {
     return await this.dao.getCarts();
   };

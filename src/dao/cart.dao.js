@@ -2,15 +2,6 @@ import cartModel from "./models/cart.model.js";
 import productModel from "./models/product.models.js";
 
 export default class CartDAO {
-  createCart = async (newCart) => {
-    try {
-      const createdCart = await cartModel.create(newCart);
-      return createdCart;
-    } catch (error) {
-      return error;
-    }
-  };
-
   getCarts = async () => {
     try {
       const carts = await cartModel.find();
