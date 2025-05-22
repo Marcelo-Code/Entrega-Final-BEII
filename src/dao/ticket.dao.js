@@ -1,7 +1,22 @@
+import { generateUniqueCode } from "../utils.js";
 import cartModel from "./models/cart.model.js";
+import ticketModel from "./models/ticket.model.js";
 
 export default class TicketDAO {
-  createTicket = async (newTicket) => {
+  createTicket = async (cid, email) => {
+    const carts = await cartModel.find();
+    const cart = await cartModel.findById(cid).populate("products.product");
+
+    const amount = cart.products.reduce((acc, product) => {
+      return acc + product.product.price * product.quantity;
+    }, 0);
+
+    const newTicket = {
+      code: await generateUniqueCode(),
+      purchase_datetime: new Date(),
+      amount,
+      purchaser: email,
+    };
     try {
       const createdTicket = await ticketModel.create(newTicket);
       return createdTicket;
@@ -23,15 +38,6 @@ export default class TicketDAO {
     try {
       const cart = await ticketModel.findOne({ _id: id });
       return cart;
-    } catch (error) {
-      return error;
-    }
-  };
-
-  deleteTicket = async (id) => {
-    try {
-      const deletedTicket = await ticketModel.deleteOne({ _id: id });
-      return deletedTicket;
     } catch (error) {
       return error;
     }

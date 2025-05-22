@@ -6,12 +6,30 @@ import {
   updateProduct,
   deleteProduct,
 } from "../controllers/product.controller.js";
+import passport from "passport";
 const router = Router();
 
-router.post("/", createProduct);
+//Crear productos, solamente los admins
+router.post(
+  "/",
+  passport.authenticate("admin", { session: false }),
+  createProduct
+);
+
+//Obtener todos los productos
 router.get("/", getProducts);
+
+//Obtener un producto por id
 router.get("/:pid", getProductById);
-router.put("/:pid", updateProduct);
+
+//Modificar un producto, solamente los admins
+router.put(
+  "/:pid",
+  passport.authenticate("admin", { session: false }),
+  updateProduct
+);
+
+//Eliminar productos, solamente los admins
 router.delete("/:pid", deleteProduct);
 
 export default router;

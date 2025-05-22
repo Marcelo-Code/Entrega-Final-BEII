@@ -1,4 +1,5 @@
 import cartModel from "./models/cart.model.js";
+import productModel from "./models/product.models.js";
 
 export default class CartDAO {
   createCart = async (newCart) => {
@@ -28,24 +29,51 @@ export default class CartDAO {
     }
   };
 
-  updateCart = async (id, cart) => {
+  updateCart = async (cid, pid, quantity) => {
     try {
-      const updatedCart = await cartModel.updateOne(
-        { _id: id },
-        { $set: cart }
-      );
-      return updatedCart;
-    } catch (error) {
-      return error;
-    }
-  };
+      // Verificar existencia del producto
+      const product = await productModel.findById(pid);
+      if (!product) {
+        throw new Error("Producto no encontrado");
+      }
 
-  deleteCart = async (id) => {
-    try {
-      const deletedCart = await cartModel.deleteOne({ _id: id });
-      return deletedCart;
+      // Validar stock suficiente
+      if (product.stock < quantity) {
+        throw new Error(`Stock insuficiente. Disponible: ${product.stock}`);
+      }
+
+      // verificar existencia del carrito
+      const cart = await cartModel.findById(cid);
+      if (!cart) {
+        throw new Error("Carrito no encontrado");
+      }
+
+      // Verificar si el producto ya está en el carrito
+      const productInCart = cart.products.find(
+        (p) => p.product.toString() === pid
+      );
+
+      if (productInCart) {
+        // Si se encuentra el producto, sumar cantidad existente más la nueva cantidad
+        const newQuantity = productInCart.quantity + quantity;
+
+        productInCart.quantity = newQuantity;
+      } else {
+        // Agregar nuevo producto al carrito
+        cart.products.push({ product: pid, quantity });
+      }
+
+      // Guardar carrito actualizado
+      await cart.save();
+
+      // Descontar stock del producto
+      product.stock -= quantity;
+      await product.save();
+
+      // Devolver carrito actualizado
+      return await cartModel.findById(cid).populate("products.product");
     } catch (error) {
-      return error;
+      throw new Error("Error al actualizar el carrito: " + error.message);
     }
   };
 }

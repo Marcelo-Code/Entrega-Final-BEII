@@ -50,12 +50,15 @@ router.post(
   async (req, res) => {
     try {
       const accessToken = generateToken(req.user.toObject());
+
       res.cookie("tokenCookie", accessToken, {
         httpOnly: true,
         maxAge: 60000,
       });
+
       req.session.user = req.user;
-      res.redirect("/profile");
+
+      return res.redirect("/profile");
     } catch (error) {
       console.log("Error al iniciar sesión: ", error);
       res.status(500).send("Error al iniciar sesión");

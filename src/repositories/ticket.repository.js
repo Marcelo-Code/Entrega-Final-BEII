@@ -6,9 +6,8 @@ export default class TicketRepository {
     this.dao = new TicketDAO();
   }
 
-  createTicket = async (newTicket) => {
-    ticketToCreate = new TicketDTO(newTicket);
-    return await this.dao.createTicket(ticketToCreate);
+  createTicket = async (cid, email) => {
+    return await this.dao.createTicket(cid, email);
   };
 
   getTickets = async () => {
@@ -17,9 +16,5 @@ export default class TicketRepository {
 
   getTicketById = async (id) => {
     return await this.dao.getTicketById(id);
-  };
-
-  deleteTicket = async (id) => {
-    return await this.dao.deleteTicket(id);
   };
 }

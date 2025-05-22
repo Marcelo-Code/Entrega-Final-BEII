@@ -40,6 +40,53 @@ const initializePassport = () => {
     )
   );
 
+  //Estrategia de autenticación (función 'admin')
+  passport.use(
+    "admin",
+    new JWTStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: PRIVATE_KEY,
+      },
+      async (jwt_payload, done) => {
+        try {
+          if (jwt_payload.role !== "admin") {
+            return done(null, false, {
+              message: "Acceso denegado: solo administradores",
+            });
+          }
+          return done(null, jwt_payload);
+        } catch (error) {
+          return done(error, false);
+        }
+      }
+    )
+  );
+
+  //Estrategia de autenticación (función 'user-cart')
+  passport.use(
+    "cartUser",
+    new JWTStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: PRIVATE_KEY,
+      },
+      async (jwt_payload, done) => {
+        try {
+          const { role, cart: userCartId } = jwt_payload;
+
+          // Si es admin, dejamos pasar
+          if (role === "admin") return done(null, jwt_payload);
+
+          // Adjuntamos el carrito del usuario en el objeto de autenticación
+          return done(null, { ...jwt_payload, userCartId });
+        } catch (error) {
+          return done(error);
+        }
+      }
+    )
+  );
+
   // Estrategia de registro (función 'register')
   passport.use(
     "register",

@@ -3,8 +3,9 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import cookieParser from "cookie-parser";
 import passport from "passport";
+import ticketModel from "./dao/models/ticket.model.js";
+import { v4 as uuidv4 } from "uuid";
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -67,3 +68,13 @@ export const authorization = (role) => {
 };
 
 export const __dirname = dirname(__filename);
+
+export const generateUniqueCode = async () => {
+  let code;
+  let exists = true;
+  while (exists) {
+    code = uuidv4(); // o cualquier función generadora que uses
+    exists = await ticketModel.exists({ code });
+  }
+  return code;
+};

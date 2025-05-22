@@ -20,8 +20,3 @@ export const updateUser = async (req, res) => {
   let result = await userService.updateUser(req.params.uid, req.body);
   res.status(200).json(result);
 };
-
-export const deleteUser = async (req, res) => {
-  let result = await userService.deleteUser(req.params.uid);
-  res.status(200).json(result);
-};

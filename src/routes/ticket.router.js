@@ -3,14 +3,26 @@ import {
   createTicket,
   getTickets,
   getTicketById,
-  deleteTicket,
 } from "../controllers/ticket.controller.js";
+import passport from "passport";
 
 const router = Router();
 
-router.post("/", createTicket);
-router.get("/", getTickets);
-router.get("/:tid", getTicketById);
-router.delete("/:tid", deleteTicket);
+//Generar tickets (cerrar la compra), solamente los usuarios autenticados
+router.post(
+  "/:cid",
+  passport.authenticate("cartUser", { session: false }),
+  createTicket
+);
+
+//Obtener todos los tickets, solamente los admins
+router.get("/", passport.authenticate("admin", { session: false }), getTickets);
+
+//Obtener un ticket por id, solamente los admins
+router.get(
+  "/:tid",
+  passport.authenticate("admin", { session: false }),
+  getTicketById
+);
 
 export default router;

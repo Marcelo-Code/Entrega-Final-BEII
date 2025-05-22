@@ -19,12 +19,7 @@ export default class CartRepository {
     return await this.dao.getCartById(id);
   };
 
-  updateCart = async (id, cart) => {
-    let cartToUpdate = new CartDTO(cart);
-    return await this.dao.updateCart(id, cartToUpdate);
-  };
-
-  deleteCart = async (id) => {
-    return await this.dao.deleteCart(id);
+  updateCart = async (cid, pid, quantity) => {
+    return await this.dao.updateCart(cid, pid, quantity);
   };
 }

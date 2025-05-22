@@ -16,11 +16,8 @@ export const getCartById = async (req, res) => {
 };
 
 export const updateCart = async (req, res) => {
-  let result = await cartService.updateCart(req.params.cid, req.body);
-  res.status(200).json(result);
-};
-
-export const deleteCart = async (req, res) => {
-  let result = await cartService.deleteCart(req.params.cid);
+  const { cid, pid } = req.params;
+  const { quantity } = req.body;
+  let result = await cartService.updateCart(cid, pid, quantity);
   res.status(200).json(result);
 };
