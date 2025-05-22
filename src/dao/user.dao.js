@@ -5,8 +5,15 @@ import cartModel from "./models/cart.model.js";
 export default class UserDAO {
   async createUser(newUser) {
     try {
-      const { first_name, last_name, age, email, password, repeat_password } =
-        newUser;
+      const {
+        first_name,
+        last_name,
+        age,
+        email,
+        password,
+        repeat_password,
+        role,
+      } = newUser;
 
       // Validación: Campos obligatorios
       if (
@@ -17,7 +24,7 @@ export default class UserDAO {
         !password ||
         !repeat_password
       ) {
-        throw new Error("Todos los campos son obligatorios");
+        throw new Error("Hay campos pendientes de completar");
       }
 
       // Validación: Contraseñas coinciden
